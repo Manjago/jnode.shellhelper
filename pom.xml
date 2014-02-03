@@ -2,14 +2,21 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>ShellHelper</groupId>
-    <artifactId>ShellHelper</artifactId>
+    <groupId>jnode</groupId>
+    <artifactId>shellhelper</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>ShellHelper</name>
+    <name>jnode.shellhelper</name>
     <url>http://maven.apache.org</url>
     <inceptionYear>2014</inceptionYear>
+
+    <scm>
+        <connection>scm:git:https://github.com/Manjago/jnode.shellhelper</connection>
+        <developerConnection>scm:git:https://github.com/Manjago/jnode.shellhelper</developerConnection>
+        <url>https://github.com/Manjago/jnode.shellhelper</url>
+        <tag>HEAD</tag>
+    </scm>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -65,6 +72,58 @@
                                 ${project.build.directory}/lib
                             </outputDirectory>
                             <includeScope>runtime</includeScope>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>buildnumber-maven-plugin</artifactId>
+                <version>1.2</version>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>create</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <shortRevisionLength>8</shortRevisionLength>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                        </manifest>
+                        <manifestEntries>
+                            <git-SHA-1>${buildNumber}</git-SHA-1>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.4</version>
+                <executions>
+                    <execution>
+                        <id>core</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>assembly</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/dist</outputDirectory>
+                            <ignoreDirFormatExtensions>false</ignoreDirFormatExtensions>
+                            <finalName>jnode-${project.version}-shellhelper</finalName>
+                            <descriptors>
+                                <descriptor>distribution-core.xml</descriptor>
+                            </descriptors>
                         </configuration>
                     </execution>
                 </executions>
